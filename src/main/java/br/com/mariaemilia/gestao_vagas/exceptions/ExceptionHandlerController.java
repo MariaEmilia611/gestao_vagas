@@ -1,36 +1,35 @@
+package br.com.mariaemilia.gestao_vagas.exceptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.context.MessageSource;
-import org.springframework.http.ResponseEntity;
-import java.util.List;
-import br.com.mariaemilia.gestao_vagas.exceptions.dto.ErrorMessageDTO;
-
-
 
 @ControllerAdvice
 public class ExceptionHandlerController {
-   
     
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     public ExceptionHandlerController(MessageSource message) {
         this.messageSource = message;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ErrorMessageDTO>> handleMethodArgumentNotValidExceptio(MethodArgumentNotValidException e) {
+    public ResponseEntity<List<ErrorMessageDTO>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) { // Nome corrigido
         List<ErrorMessageDTO> dto = new ArrayList<>();
 
-      e.getBindingResult().getFieldErrors().forEach(err -> {
+        e.getBindingResult().getFieldErrors().forEach(err -> {
             String message = messageSource.getMessage(err, LocaleContextHolder.getLocale());
             ErrorMessageDTO error = new ErrorMessageDTO(err.getField(), message);
             dto.add(error);
-       });
+        });
 
-       return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
-    
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }    
-
 }
