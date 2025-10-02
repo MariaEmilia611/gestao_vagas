@@ -1,6 +1,7 @@
 package br.com.mariaemilia.gestao_vagas.modules.candidate.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +19,17 @@ public class CandidateController {
     private CandidateRepository candidateRepository;
 
     @PostMapping("/")
-    public void create(@Valid @RequestBody CandidateEntity candidateEntity) {
-        this.candidateRepository.save(candidateEntity);
-     
+    public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity) {
+        try {
+            // 1. Salve a entidade E capture o resultado na variável 'result'
+            var result = this.candidateRepository.save(candidateEntity);
+
+            // 2. Retorne a variável 'result'. O Spring irá convertê-la para JSON automaticamente.
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            // É uma boa prática retornar o erro caso algo dê errado na validação
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     
 }
