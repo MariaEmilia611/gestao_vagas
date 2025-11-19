@@ -8,13 +8,13 @@ import br.com.mariaemilia.gestao_vagas.modules.company.repositories.JobRepositor
 
 @Service
 public class CreateJobUseCase {
-    @Autowired
-    private JobRepository jobRepository;
+      
+      @Autowired
+      private JobRepository jobRepository;
 
       public JobEntity execute(JobEntity jobEntity) {
-        return this.jobRepository.save(jobEntity);
-    }
-
+         return this.jobRepository.save(jobEntity);
+      }
 
 
 }
